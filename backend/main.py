@@ -33,18 +33,17 @@ def listar_series():
 
 @app.get("/kpis")
 def kpis():
-    """Retorna o último valor de cada série."""
     df = carregar()
     resultado = {}
     for serie in df["serie"].unique():
-        ultimo = (
-            df[df["serie"] == serie]
-            .sort_values("data")
-            .iloc[-1]
-        )
+        serie_df = df[df["serie"] == serie].sort_values("data")
+        ultimo = serie_df.iloc[-1]
+        penultimo = serie_df.iloc[-2] if len(serie_df) >= 2 else None
+        variacao = round(float(ultimo["valor"]) - float(penultimo["valor"]), 2) if penultimo is not None else None
         resultado[serie] = {
             "valor": ultimo["valor"],
             "data": ultimo["data"],
+            "variacao": variacao,
         }
     return resultado
 
