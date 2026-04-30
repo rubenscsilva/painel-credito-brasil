@@ -5,7 +5,8 @@ import {
   ResponsiveContainer, CartesianGrid
 } from "recharts"
 
-const API = "http://localhost:8000"
+// const API = "http://localhost:8000"
+const API = "https://painel-credito-brasil-api.onrender.com"
 
 const SERIES_CONFIG = {
   inadimplencia_pf:  { label: "Inadimplência PF",      unidade: "%",      cor: "#E24B4A" },
