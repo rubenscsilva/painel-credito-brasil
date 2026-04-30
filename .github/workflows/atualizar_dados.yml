@@ -1,0 +1,36 @@
+name: Atualizar dados BCB
+
+on:
+  schedule:
+    - cron: "0 8 1 * *" # Todo dia 1 do mês às 08h UTC
+  workflow_dispatch: # Permite rodar manualmente também
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependências
+        run: |
+          pip install requests pandas
+
+      - name: Rodar ETL e atualizar banco
+        run: |
+          cd backend
+          python db.py
+
+      - name: Commit e push do banco atualizado
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add backend/data/bcb.db
+          git diff --staged --quiet || git commit -m "chore: atualização automática dos dados BCB"
+          git push
